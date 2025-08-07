@@ -1,7 +1,7 @@
 import type { CreateRosterResponse, DeleteRosterResponse, GetRosterResponse, GetRostersResponse, Roster, UpdateRosterResponse } from "../types";
 import { fetchClient } from "./fetchClient";
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'https://pokemon-rosters-service.onrender.com';
 
 export async function getRosters(): Promise<GetRostersResponse> {
   try {
