@@ -13,7 +13,7 @@ export default function App() {
       <Header />
       <main className='main-content'>
         <Routes>
-          <Route path={PATHS.BASE.value} element={<Navigate to="/rosters" />} />
+          <Route path={PATHS.BASE.value} element={<Navigate to={PATHS.CREATE.value} />} />
           <Route path={PATHS.LIST.value} element={<ListRosters />} />
           <Route path={PATHS.EDIT.value} element={<RosterBuilder />} />
           <Route path={PATHS.CREATE.value} element={<RosterBuilder />} />
