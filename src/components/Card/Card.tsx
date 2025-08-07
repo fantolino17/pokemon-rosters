@@ -9,7 +9,7 @@ export const Card = ({
 	key,
 	title = '',
 	subtitles = [],
-	imageUrl = '/src/assets/pokeball.png',
+	imageUrl = './assets/pokeball.png',
 }: {
 	key: any,
 	title: string,

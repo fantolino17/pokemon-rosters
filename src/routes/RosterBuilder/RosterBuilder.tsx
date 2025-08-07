@@ -55,7 +55,6 @@ const RosterBuilder = () => {
     if (!isRehydrating) {
       setRosterName(initialRosterName);
       setRosterTeam(initialRosterTeam);
-      console.log('isFormLoading', isFormLoading)
       setIsFormLoading(false);
     } else {
       setIsFormLoading(true);
@@ -146,7 +145,6 @@ const RosterBuilder = () => {
   }
 
   // Derived state
-  console.log('isRehydrating', isRehydrating)
   const showFormSpinner = isFormLoading || isRehydrating;
   const showGridSpinner = isGetAllPokemonLoading || isGetAllPokemonByType || isPokemonDetailsLoading;
   const rosterNameError = !!(submissionError && !rosterName);
