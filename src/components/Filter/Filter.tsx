@@ -1,4 +1,5 @@
 import { Autocomplete, TextField, FormControl } from '@mui/material';
+import type { Option } from '../../types';
 
 const Filter = ({
   options = [],
@@ -8,7 +9,7 @@ const Filter = ({
   noOptionsText,
   style = {},
 }: {
-  options: { value: string, label: string }[],
+  options: Option[],
   onChange: (value: any) => void,
   filterLabel: string,
   freeSolo: boolean,

@@ -13,3 +13,8 @@ export type InfoBanner = {
   severity: 'error' | 'success' | 'info' | 'warning';
   message: string;
 } | null;
+
+export type Option = {
+  label: string,
+  value: string
+}

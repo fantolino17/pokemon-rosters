@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import type { Option } from '../types';
 
 // TODO: Accept filter function prop so other consumers can customize.
 // TODO: Create generic type for allItems so it extends beyond our use case.
@@ -9,7 +10,8 @@ export const useFilterAndPagination = ({
 }) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
-  const [searchFilter, setSearchFilter] = useState('');
+  const [searchFilter, setSearchFilter] = useState<Option | string | null>(null);
+  const searchFilterValue = searchFilter && typeof searchFilter === 'object' ? searchFilter.value : searchFilter;
   
   useEffect(() => {
     setPage(0);
@@ -19,8 +21,8 @@ export const useFilterAndPagination = ({
   const { results, totalCount } = useMemo(() => {
     const offset = page * pageSize;
 
-    const searchedResults = searchFilter
-    ? allItems.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
+    const searchedResults = searchFilterValue
+    ? allItems.filter(item => item.name.toLowerCase().includes(searchFilterValue.toLowerCase()))
     : allItems;
     
     // Get results within current page.
