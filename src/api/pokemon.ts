@@ -50,7 +50,7 @@ export async function getFullRosterTeam({
   allPokemon,
   existingTeam,
   maxSize = MAX_TEAM_SIZE,
-  batchSize = 5,
+  batchSize = 10,
   maxAttempts = 5,
 }: GetFullRosterTeamParams): Promise<{ team: Pokemon[]}> {
 
