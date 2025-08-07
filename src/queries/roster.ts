@@ -1,8 +1,7 @@
 import { getRoster, getRosters } from "../api/roster";
 import { useQuery } from '@tanstack/react-query'
+import type { GetRosterResponse, Roster } from "../types";
 
-
-// TODO: Maybe add onRefreshClick prop
 export const useGetRosters = () => {
   const { data = {}, isLoading } = useQuery({
     queryKey: ['roster', `all`],
@@ -12,12 +11,11 @@ export const useGetRosters = () => {
 };
 
 export const useGetRosterById = (rosterId: string) => {
-  const { data = {}, isFetching, refetch } = useQuery({
+  const { data = {}, isFetching, refetch } = useQuery<GetRosterResponse>({
     queryKey: ['roster', `id: ${rosterId}`],
     queryFn: () => getRoster(rosterId),
-    // staleTime: 'static',
   });
-  const { id, name, team } = data;
+  const { id, name, team } = data as Roster;
 
   return { id, name, team, isLoading: isFetching, refetch };
 };

@@ -1,6 +1,4 @@
-import { Autocomplete, TextField, FormControl, Box, Button, InputLabel, MenuItem, Select, Stack, Typography } from '@mui/material';
-import { capitalize } from '../../utils/utils';
-
+import { Autocomplete, TextField, FormControl } from '@mui/material';
 
 const Filter = ({
   options = [],

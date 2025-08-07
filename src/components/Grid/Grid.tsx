@@ -3,12 +3,11 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material';
+import type { GridItemDetail } from '../../types';
 import { capitalize } from '../../utils/utils';
 import { Card } from "../Card/Card";
 
 // TODO: Maybe refactor to be more generic with  "title", "subtitle", "imageUrl"
-// GridItem instead of Pokemon
-
 const Grid = ({
   itemList = [],
   selectedItems = [],
@@ -16,11 +15,11 @@ const Grid = ({
   isLoading = false,
   style,
 }: {
-  itemList: Pokemon[],
-  selectedItems: Pokemon[],
-  onSelect: (pokemon: Pokemon) => void,
-  isLoading: boolean,
-  style: {},
+  itemList: GridItemDetail[],
+  onSelect: (pokemon: GridItemDetail) => void,
+  selectedItems?: GridItemDetail[],
+  isLoading?: boolean,
+  style?: {},
 }) => {
   return (
     <MUIGrid
@@ -36,8 +35,8 @@ const Grid = ({
     >
       {isLoading && <CircularProgress sx={{ alignSelf: 'center' }}/>}
       {!isLoading && !itemList.length && <Typography>No items found!</Typography>}
-      {!isLoading && itemList.map(({ id, name, types = [], imageUrl }: Pokemon) => {
-        const selected = !!selectedItems.some((selectedItem: Pokemon) => selectedItem.id === id);
+      {!isLoading && itemList.map(({ id, name, types = [], imageUrl }: GridItemDetail) => {
+        const selected = !!selectedItems.some((selectedItem: GridItemDetail) => selectedItem.id === id);
         return (
           <MUIGrid
             key={id}

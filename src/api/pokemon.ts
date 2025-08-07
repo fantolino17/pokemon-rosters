@@ -1,45 +1,46 @@
+import type { GetFullRosterTeamParams, GetPokemonListResponse, GetTypeListResponse, Pokemon, PokemonDetailApiResponse, PokemonListItem, PokemonType } from '../types';
 import { MAX_TEAM_SIZE } from '../utils/constants';
 import { getIdFromUrl, getRandomPokemonId } from '../utils/utils';
 import { fetchClient } from './fetchClient';
 
 const BASE_URL = 'https://pokeapi.co/api/v2'
 
-export async function getPokemonList({ offset = 0, limit = 20 }): Promise<T> {
-  const response = await fetchClient(`${BASE_URL}/pokemon?offset=${offset}&limit=${limit}`);
+export async function getPokemonList({ offset = 0, limit = 20 }): Promise<GetPokemonListResponse> {
+  const response = await fetchClient(`${BASE_URL}/pokemon?offset=${offset}&limit=${limit}`) as GetPokemonListResponse;
   const { results, count } = response;
 
-  return { results, totalCount: count };
+  return { results, count };
 }
 
-export async function getPokemonById(id: string): Promise<T> {
-  const response = await fetchClient(`${BASE_URL}/pokemon/${id}`);
+export async function getPokemonByType(typeFilter: string): Promise<GetPokemonListResponse> {
+  if (!typeFilter) {
+    return { results: [], count: 0 };
+  }
+
+  const response = await fetchClient(`${BASE_URL}/type/${typeFilter}`) as any;
+  const { pokemon } = response;
+  const parsedResults = pokemon
+    .map(({ pokemon: item }: { pokemon: PokemonListItem }) => ({ name: item.name, url: item.url }))
+
+  return { results: parsedResults, count: parsedResults.length };
+}
+
+export async function getPokemonById(id: string): Promise<Pokemon> {
+  const response = await fetchClient(`${BASE_URL}/pokemon/${id}`) as PokemonDetailApiResponse;
   
   // Extract types and image from results.
-  const types = response.types?.map(type => type.type?.name);
-  const imageUrl = response.sprites?.front_default;
+  const types = response.types?.map((type: PokemonType) => type.type?.name) ?? [];
+  const imageUrl = response.sprites?.front_default ?? '';
   const { name } = response;
 
   return { name, id, types, imageUrl };
 }
 
-export async function getPokemonByType(typeFilter: string) {
-  if (!typeFilter) {
-    return { results: [], totalCount: 0 };
-  }
-
-  const response = await fetchClient(`${BASE_URL}/type/${typeFilter}`);
-  const { pokemon } = response;
-  const parsedResults = pokemon
-    .map(({ pokemon: item }) => ({ name: item.name, url: item.url }))
-
-  return { results: parsedResults, totalCount: parsedResults.length };
-}
-
-export async function getTypeList({ offset = 0, limit = 20 }): Promise<{ value: string, label: string }> {
-  const response = await fetchClient(`${BASE_URL}/type?offset=${offset}&limit=${limit}`);
+export async function getTypeList({ offset = 0, limit = 20 }): Promise<GetTypeListResponse[]> {
+  const response = await fetchClient(`${BASE_URL}/type?offset=${offset}&limit=${limit}`) as { results: PokemonListItem[] };
   const { results } = response;
-  const parsedResults = results.map(result => ({ label: result.name, value: getIdFromUrl(result.url) }))
-    .sort((itemA, itemB) => itemA.label > itemB.label ? 1 : -1);
+  const parsedResults = results.map((result: PokemonListItem): GetTypeListResponse => ({ label: result.name, value: getIdFromUrl(result.url) }))
+    .sort((itemA: GetTypeListResponse, itemB: GetTypeListResponse): number => itemA.label > itemB.label ? 1 : -1);
 
   return parsedResults;
 }
@@ -51,7 +52,7 @@ export async function getFullRosterTeam({
   maxSize = MAX_TEAM_SIZE,
   batchSize = 5,
   maxAttempts = 5,
-}): Promise<{ team: string[] }> {
+}: GetFullRosterTeamParams): Promise<{ team: Pokemon[]}> {
 
   // If team is already full, simply return.
   if (existingTeam.length === maxSize) {
@@ -71,14 +72,16 @@ export async function getFullRosterTeam({
     attempt++;
     
     // Get array of random pokemon IDs from list.
-    const batch = [];
+    const batch: Promise<Pokemon>[] = [];
+    const batchIds: string[] = []
     while (batch.length < batchSize) {
       const randomPokemonId = getRandomPokemonId(allPokemon);
       
       // If this pokemon is already on our team or current batch, continue so we can pick a new one.
-      if (existingPokemonIds.includes(randomPokemonId) || batch.includes(randomPokemonId)) continue;
+      if (existingPokemonIds.includes(randomPokemonId) || batchIds.includes(randomPokemonId)) continue;
       
       batch.push(getPokemonById(randomPokemonId));
+      batchIds.push(randomPokemonId);
     }
 
     // Kick off several requests in parallel.
@@ -110,13 +113,15 @@ export async function getFullRosterTeam({
   // TODO: There's a lot of repeated code below and above, we can consolidate into a helper.
   while (finalTeam.length < maxSize) {    
     // Get array of random pokemon IDs from list.
-    const batch = [];
+    const batch: Promise<Pokemon>[] = [];
+    const batchIds: string[] = []
     while (batch.length < batchSize) {
       const randomPokemonId = getRandomPokemonId(allPokemon);
       // If this pokemon is already on our team or current batch, continue so we can pick a new one.
-      if (existingPokemonIds.includes(randomPokemonId) || batch.includes(randomPokemonId)) continue;
+      if (existingPokemonIds.includes(randomPokemonId) || batchIds.includes(randomPokemonId)) continue;
 
       batch.push(getPokemonById(randomPokemonId));
+      batchIds.push(randomPokemonId);
     }
 
     // Kick off several requests in parallel.

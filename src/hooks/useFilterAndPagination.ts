@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 
 // TODO: Accept filter function prop so other consumers can customize.
+// TODO: Create generic type for allItems so it extends beyond our use case.
 export const useFilterAndPagination = ({
   allItems,
+}: {
+  allItems: any[]
 }) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);

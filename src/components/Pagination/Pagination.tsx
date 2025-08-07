@@ -32,13 +32,15 @@ const Pagination = ({
           id="dropdown"
           value={pageSize}
           label="Page size"
-          onChange={(e): Event => onPageSizeChange(e?.target?.value || 20)}
+          onChange={(e: any): void => onPageSizeChange(e?.target?.value as number || 20)}
           MenuProps={{
             anchorOrigin: {
               vertical: 'top',
+              horizontal: 'center',
             },
             transformOrigin: {
               vertical: 'bottom',
+              horizontal: 'center',
             },
           }}
         >

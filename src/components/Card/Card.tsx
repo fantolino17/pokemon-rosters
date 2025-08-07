@@ -1,7 +1,6 @@
 import {
 	Box,
   Card as MUICard,
-	CardContent,
 	Divider,
   Typography,
 } from '@mui/material';

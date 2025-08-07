@@ -2,19 +2,12 @@ import {
   AppBar,
   Box,
   Button,
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   Toolbar,
   Typography,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../utils/constants';
 
-const drawerWidth = 240;
 const pokeballImg = '/src/assets/pokeball.png';
 
 const Header = () => {

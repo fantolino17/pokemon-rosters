@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { Alert, AlertTitle, Box, Button, CircularProgress, Container, Divider, Stack, Typography, TextField } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Container, Divider, Stack, Typography, TextField } from '@mui/material';
 import Grid from '../../components/Grid';
 import Pagination from '../../components/Pagination';
 import Filter from '../../components/Filter';
@@ -10,14 +10,15 @@ import { getFullRosterTeam } from '../../api/pokemon';
 import { areTeamsEqual } from '../../utils/utils';
 import { useRehydratedRoster } from '../../hooks/useRehydrateRoster';
 import { MAX_TEAM_SIZE } from '../../utils/constants';
+import type { InfoBanner, Pokemon, PokemonListItem } from '../../types';
 
 const RosterBuilder = () => {
   // Form state
-  const [rosterName, setRosterName] = useState('');
-  const [rosterTeam, setRosterTeam] = useState([]);
+  const [rosterName, setRosterName] = useState<string>('');
+  const [rosterTeam, setRosterTeam] = useState<Pokemon[]>([]);
   const [isFormLoading, setIsFormLoading] = useState(false);
-  const [bannerInfo, setBannerInfo] = useState(null);
-  const [submissionError, setSubmissionError] = useState('');
+  const [bannerInfo, setBannerInfo] = useState<InfoBanner>(null);
+  const [submissionError, setSubmissionError] = useState<string>('');
 
   // Grid control
   const [typeFilter, setTypeFilter] = useState('');
@@ -54,7 +55,10 @@ const RosterBuilder = () => {
     if (!isRehydrating) {
       setRosterName(initialRosterName);
       setRosterTeam(initialRosterTeam);
+      console.log('isFormLoading', isFormLoading)
       setIsFormLoading(false);
+    } else {
+      setIsFormLoading(true);
     }
   }, [isRehydrating]);
 
@@ -84,7 +88,7 @@ const RosterBuilder = () => {
     resetMessaging();
   };
 
-  const handleRosterNameChange = (e) => {
+  const handleRosterNameChange = (e: { target: { value: string } }) => {
     const { value } = e.target;
     setRosterName(value);
     resetMessaging();
@@ -130,7 +134,6 @@ const RosterBuilder = () => {
       return;
     }
     setBannerInfo({
-      title: 'Success',
       severity: 'success',
       message: successMessage ,
     });
@@ -143,9 +146,10 @@ const RosterBuilder = () => {
   }
 
   // Derived state
+  console.log('isRehydrating', isRehydrating)
   const showFormSpinner = isFormLoading || isRehydrating;
   const showGridSpinner = isGetAllPokemonLoading || isGetAllPokemonByType || isPokemonDetailsLoading;
-  const rosterNameError = submissionError && !rosterName;
+  const rosterNameError = !!(submissionError && !rosterName);
   const isSubmissionButtonDisabled = rosterName === initialRosterName && areTeamsEqual(rosterTeam, initialRosterTeam);
   return (
     <>
@@ -220,7 +224,7 @@ const RosterBuilder = () => {
               style={{ alignSelf: 'start', button: { alignSelf: 'start'} }}
             />
             <Filter
-              options={allPokemon.map(pokemon => pokemon.name)}
+              options={allPokemon.map((pokemon: PokemonListItem) => ({ value: pokemon.name, label: pokemon.name }))}
               onChange={setSearchFilter}
               filterLabel='Search'
               freeSolo

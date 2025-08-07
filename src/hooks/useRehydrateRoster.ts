@@ -1,8 +1,13 @@
 import { useGetRosterById } from '../queries/roster';
 import { useGetPokemonDetails } from '../queries/pokemon';
+import type { Pokemon } from '../types';
 
-export const useRehydratedRoster = (rosterId: string) => {
-  console.log('isRehydrating inside useRehydratedRoster')
+export const useRehydratedRoster = (rosterId: string): {
+  name: string,
+  team: Pokemon[],
+  isLoading: boolean,
+  refetch: () => void,
+} => {
   const {
     name = '',
     team: teamMemberIds = [],
@@ -16,7 +21,6 @@ export const useRehydratedRoster = (rosterId: string) => {
   } = useGetPokemonDetails({ ids: teamMemberIds });
 
   const isLoading = isRosterLoading || isPokemonDetailsLoading;
-  console.log('isRehydrating inside isLoading', isRosterLoading)
 
   return { name, team, isLoading, refetch };
 };
