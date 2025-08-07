@@ -4,13 +4,13 @@ import {
 	Divider,
   Typography,
 } from '@mui/material';
-import pokeball from '../../assets/pokeball.png';
+import pokeballImg from '../../assets/pokeball.png';
 
 export const Card = ({
 	key,
 	title = '',
 	subtitles = [],
-	imageUrl = pokeball,
+	imageUrl = pokeballImg,
 }: {
 	key: any,
 	title: string,

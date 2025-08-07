@@ -7,8 +7,7 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../utils/constants';
-
-const pokeballImg = '/src/assets/pokeball.png';
+import pokeballImg from '../../assets/pokeball.png';
 
 const Header = () => {
   return (
