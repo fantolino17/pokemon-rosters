@@ -68,7 +68,7 @@ const ListRosters = () => {
       <Divider />
       <DataGrid
         density='comfortable'
-        sx={{ fontSize: '1.25rem', margin: '24px auto', width: 'fit-content', maxHeight: '70vh' }}
+        sx={{ fontSize: '1rem', margin: '24px auto', width: 'fit-content', maxHeight: '70vh' }}
         rowSelection={false}
         rows={rosters}
         columns={columns}

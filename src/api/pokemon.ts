@@ -1,3 +1,4 @@
+import capitalize from '@mui/utils/capitalize';
 import type { GetFullRosterTeamParams, GetPokemonListResponse, GetTypeListResponse, Pokemon, PokemonDetailApiResponse, PokemonListItem, PokemonType } from '../types';
 import { BASE_POKEMON_API_URL, BASE_POKEMON_ROSTERS_SERVICE_URL, MAX_TEAM_SIZE } from '../utils/constants';
 import { getIdFromUrl, getRandomPokemonId } from '../utils/utils';
@@ -37,7 +38,7 @@ export async function getPokemonById(id: string): Promise<Pokemon> {
 export async function getTypeList({ offset = 0, limit = 20 }): Promise<GetTypeListResponse[]> {
   const response = await fetchClient(`${BASE_POKEMON_API_URL}/type?offset=${offset}&limit=${limit}`) as { results: PokemonListItem[] };
   const { results } = response;
-  const parsedResults = results.map((result: PokemonListItem): GetTypeListResponse => ({ label: result.name, value: getIdFromUrl(result.url) }))
+  const parsedResults = results.map((result: PokemonListItem): GetTypeListResponse => ({ label: capitalize(result.name), value: getIdFromUrl(result.url) }))
     .sort((itemA: GetTypeListResponse, itemB: GetTypeListResponse): number => itemA.label > itemB.label ? 1 : -1);
 
   return parsedResults;

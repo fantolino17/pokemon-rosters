@@ -7,7 +7,7 @@ import Filter from '../../components/Filter';
 import { useGetAllPokemon, useGetAllTypes, useGetAllPokemonByType, useGetFilteredAndPaginatedPokemonDetails } from '../../queries/pokemon';
 import { createRoster, updateRoster } from '../../api/roster';
 import { getFullRosterTeam } from '../../api/pokemon';
-import { areTeamsEqual } from '../../utils/utils';
+import { areTeamsEqual, capitalize } from '../../utils/utils';
 import { useRehydratedRoster } from '../../hooks/useRehydrateRoster';
 import { MAX_TEAM_SIZE } from '../../utils/constants';
 import type { InfoBanner, Pokemon, PokemonListItem } from '../../types';
@@ -222,7 +222,7 @@ const RosterBuilder = () => {
               style={{ alignSelf: 'start', button: { alignSelf: 'start'} }}
             />
             <Filter
-              options={allPokemon.map((pokemon: PokemonListItem) => ({ value: pokemon.name, label: pokemon.name }))}
+              options={allPokemon.map((pokemon: PokemonListItem) => ({ value: pokemon.name, label: capitalize(pokemon.name) }))}
               onChange={setSearchFilter}
               filterLabel='Search'
               freeSolo
