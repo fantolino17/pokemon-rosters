@@ -33,4 +33,4 @@ It allows users to create and manage their Pokemon rosters.
 
 1. Follow the same steps as above
 2. Follow the README of pokemon-rosters-service
-3. Update `BASE_URL` in `src/api/roster` to `http://localhost:3000`
+3. Update `BASE_POKEMON_ROSTERS_SERVICE_URL` in `src/utils/constants` to `http://localhost:3000`

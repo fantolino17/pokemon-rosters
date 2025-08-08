@@ -1,11 +1,10 @@
 import type { CreateRosterResponse, DeleteRosterResponse, GetRosterResponse, GetRostersResponse, Roster, UpdateRosterResponse } from "../types";
+import { BASE_POKEMON_ROSTERS_SERVICE_URL } from "../utils/constants";
 import { fetchClient } from "./fetchClient";
-
-const BASE_URL = 'https://pokemon-rosters-service.onrender.com';
 
 export async function getRosters(): Promise<GetRostersResponse> {
   try {
-    return await fetchClient(`${BASE_URL}/roster`);
+    return await fetchClient(`${BASE_POKEMON_ROSTERS_SERVICE_URL}/roster`);
   } catch (error) {
     console.error('[getRosters] ', error);
     return [];
@@ -18,7 +17,7 @@ export async function getRoster(rosterId: string): Promise<GetRosterResponse> {
     if (!rosterId) {
       return { id: null };
     }
-    const response = await fetchClient(`${BASE_URL}/roster/${rosterId}`) as Roster;
+    const response = await fetchClient(`${BASE_POKEMON_ROSTERS_SERVICE_URL}/roster/${rosterId}`) as Roster;
     const { id, name, team } = response;
     
     return { id, name, team };
@@ -30,7 +29,7 @@ export async function getRoster(rosterId: string): Promise<GetRosterResponse> {
 
 export async function createRoster(roster: Partial<Roster>): Promise<CreateRosterResponse> {
   try {
-    const response = await fetchClient(`${BASE_URL}/roster`, {
+    const response = await fetchClient(`${BASE_POKEMON_ROSTERS_SERVICE_URL}/roster`, {
       method: 'POST',
       body: JSON.stringify(roster),
     });
@@ -46,7 +45,7 @@ export async function createRoster(roster: Partial<Roster>): Promise<CreateRoste
 
 export async function updateRoster(id: string, roster: Partial<Roster>): Promise<UpdateRosterResponse> {
   try {
-    const response = await fetchClient(`${BASE_URL}/roster/${id}`, {
+    const response = await fetchClient(`${BASE_POKEMON_ROSTERS_SERVICE_URL}/roster/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(roster),
     });
@@ -62,7 +61,7 @@ export async function updateRoster(id: string, roster: Partial<Roster>): Promise
 
 export async function deleteRoster(id: string): Promise<DeleteRosterResponse> {
   try {
-    const response = await fetchClient(`${BASE_URL}/roster/${id}`, {
+    const response = await fetchClient(`${BASE_POKEMON_ROSTERS_SERVICE_URL}/roster/${id}`, {
       method: 'DELETE',
     }) as { id: string }[];
     const roster = response?.[0];

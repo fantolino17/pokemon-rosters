@@ -1,12 +1,10 @@
 import type { GetFullRosterTeamParams, GetPokemonListResponse, GetTypeListResponse, Pokemon, PokemonDetailApiResponse, PokemonListItem, PokemonType } from '../types';
-import { MAX_TEAM_SIZE } from '../utils/constants';
+import { BASE_POKEMON_API_URL, BASE_POKEMON_ROSTERS_SERVICE_URL, MAX_TEAM_SIZE } from '../utils/constants';
 import { getIdFromUrl, getRandomPokemonId } from '../utils/utils';
 import { fetchClient } from './fetchClient';
 
-const BASE_URL = 'https://pokeapi.co/api/v2'
-
 export async function getPokemonList({ offset = 0, limit = 20 }): Promise<GetPokemonListResponse> {
-  const response = await fetchClient(`${BASE_URL}/pokemon?offset=${offset}&limit=${limit}`) as GetPokemonListResponse;
+  const response = await fetchClient(`${BASE_POKEMON_API_URL}/pokemon?offset=${offset}&limit=${limit}`) as GetPokemonListResponse;
   const { results, count } = response;
 
   return { results, count };
@@ -17,7 +15,7 @@ export async function getPokemonByType(typeFilter: string): Promise<GetPokemonLi
     return { results: [], count: 0 };
   }
 
-  const response = await fetchClient(`${BASE_URL}/type/${typeFilter}`) as any;
+  const response = await fetchClient(`${BASE_POKEMON_API_URL}/type/${typeFilter}`) as any;
   const { pokemon } = response;
   const parsedResults = pokemon
     .map(({ pokemon: item }: { pokemon: PokemonListItem }) => ({ name: item.name, url: item.url }))
@@ -26,7 +24,7 @@ export async function getPokemonByType(typeFilter: string): Promise<GetPokemonLi
 }
 
 export async function getPokemonById(id: string): Promise<Pokemon> {
-  const response = await fetchClient(`${BASE_URL}/pokemon/${id}`) as PokemonDetailApiResponse;
+  const response = await fetchClient(`${BASE_POKEMON_API_URL}/pokemon/${id}`) as PokemonDetailApiResponse;
   
   // Extract types and image from results.
   const types = response.types?.map((type: PokemonType) => type.type?.name) ?? [];
@@ -37,7 +35,7 @@ export async function getPokemonById(id: string): Promise<Pokemon> {
 }
 
 export async function getTypeList({ offset = 0, limit = 20 }): Promise<GetTypeListResponse[]> {
-  const response = await fetchClient(`${BASE_URL}/type?offset=${offset}&limit=${limit}`) as { results: PokemonListItem[] };
+  const response = await fetchClient(`${BASE_POKEMON_API_URL}/type?offset=${offset}&limit=${limit}`) as { results: PokemonListItem[] };
   const { results } = response;
   const parsedResults = results.map((result: PokemonListItem): GetTypeListResponse => ({ label: result.name, value: getIdFromUrl(result.url) }))
     .sort((itemA: GetTypeListResponse, itemB: GetTypeListResponse): number => itemA.label > itemB.label ? 1 : -1);
@@ -143,3 +141,10 @@ export async function getFullRosterTeam({
 
   return { team: finalTeam };
 };
+
+// Currently unused. Can leverage for server side pagination. 
+export async function getPokemonListWithDetails({ offset = 0, limit = 20 }): Promise<{ pokemonDetails: Pokemon[] }> {
+  const response = await fetchClient(`${BASE_POKEMON_ROSTERS_SERVICE_URL}/pokemon?offset=${offset}&limit=${limit}`) as Pokemon[];
+
+  return { pokemonDetails: response };
+}
