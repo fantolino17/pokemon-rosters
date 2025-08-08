@@ -29,7 +29,7 @@ const RosterBuilder = () => {
   // Pokemon
   const { allPokemon = [], isLoading: isGetAllPokemonLoading } = useGetAllPokemon();
   const { allTypes = [] } = useGetAllTypes();
-  const { allPokemonByType = [], isLoading: isGetAllPokemonByType } = useGetAllPokemonByType(typeFilter);
+  const { allPokemonByType = [], isLoading: isGetAllPokemonByTypeLoading } = useGetAllPokemonByType(typeFilter);
 
   // Roster rehydration
   const { id: rosterId = '' } = useParams();
@@ -146,7 +146,7 @@ const RosterBuilder = () => {
 
   // Derived state
   const showFormSpinner = isFormLoading || isRehydrating;
-  const showGridSpinner = isGetAllPokemonLoading || isGetAllPokemonByType || isPokemonDetailsLoading;
+  const showGridSpinner = isGetAllPokemonLoading || isGetAllPokemonByTypeLoading || isPokemonDetailsLoading;
   const rosterNameError = !!(submissionError && !rosterName);
   const isSubmissionButtonDisabled = rosterName === initialRosterName && areTeamsEqual(rosterTeam, initialRosterTeam);
   return (
